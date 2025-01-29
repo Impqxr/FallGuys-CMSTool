@@ -14,7 +14,7 @@
 		ExtendClientAreaToDecorationsHint="True">
 	<Panel>
 		<StackPanel x:Name="MenuTitle">
-			<TextBlock Margin="0,8,0,0" HorizontalAlignment="Center" Text="{local:LocalizedMarkup about_title}" />
+			<TextBlock Margin="0,8,0,0" HorizontalAlignment="Center" IsHitTestVisible="False" Text="{local:LocalizedMarkup about_title}" />
 			<Separator VerticalAlignment="Top" Margin="10,5,10,0"/>
 		</StackPanel>
 

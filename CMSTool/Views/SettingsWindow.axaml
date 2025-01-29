@@ -15,7 +15,7 @@
 
 	<Panel>
 		<StackPanel x:Name="MenuTitle">
-			<TextBlock Margin="0,8,0,0" HorizontalAlignment="Center" Text="{local:LocalizedMarkup settings_title}" />
+			<TextBlock Margin="0,8,0,0" HorizontalAlignment="Center" IsHitTestVisible="False" Text="{local:LocalizedMarkup settings_title}" />
 			<Separator VerticalAlignment="Top" Margin="10,5,10,0"/>
 		</StackPanel>
 		<StackPanel x:Name="MainContent" Margin="15,40,15,0" Spacing="5">
