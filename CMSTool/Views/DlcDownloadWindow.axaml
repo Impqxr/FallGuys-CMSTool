@@ -16,12 +16,12 @@
 
 	<Panel>
 		<StackPanel>
-			<TextBlock Margin="0,8,0,0" HorizontalAlignment="Center" Text="{local:LocalizedMarkup dlc_cms}" />
-			<Separator VerticalAlignment="Top" Margin="10,5,10,0"/>
+			<TextBlock x:Name="MenuTitleTextBlock" Margin="0,8,0,0" HorizontalAlignment="Center" Text="{local:LocalizedMarkup dlc_cms}" />
+			<Separator x:Name="MenuTitleSeparator" VerticalAlignment="Top" Margin="10,5,10,0"/>
 			<TextBlock Text="{local:LocalizedMarkup dlc_cms_tip}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" Margin="10,5,10,0"/>
 		</StackPanel>
-		
-		<Grid Margin="0,55,0,25">
+
+		<Grid x:Name="MainContent" Margin="0,55,0,25">
 			<Border Grid.Row="1" BorderThickness="1" BorderBrush="Gray" CornerRadius="5">
 				<ScrollViewer x:Name="DownloadProgressLog" Margin="0, 0, 0, 0">
 				<ItemsControl x:Name="LogsControl">

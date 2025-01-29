@@ -41,6 +41,7 @@
             dotnet-runtime = pkgs.dotnetCorePackages.runtime_8_0;
             nugetDeps = ./deps.json;
             executables = [ "CMSTool" ];
+            buildType = "Release-Linux-x64";
 
             desktopItems = [
               (pkgs.makeDesktopItem {

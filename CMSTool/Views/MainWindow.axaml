@@ -40,11 +40,11 @@
     </DockPanel>
 
 	<StackPanel>
-		<TextBlock Margin="0,8,0,0" HorizontalAlignment="Center" Text="{local:LocalizedMarkup menu_title}" />
+		<TextBlock x:Name="MenuTitleTextBlock" Margin="0,8,0,0" HorizontalAlignment="Center" Text="{local:LocalizedMarkup menu_title}" />
 		<Separator VerticalAlignment="Top" Margin="10,5,10,0"/>
 	</StackPanel>
-    
-    <StackPanel Margin="0,30,0,0" Spacing="0" VerticalAlignment="Stretch">
+
+  <StackPanel Margin="0,30,0,0" Spacing="0" VerticalAlignment="Stretch">
 		<TabControl Margin="2">
 			<TabItem Header="{local:LocalizedMarkup menu_tab_cms}">
 				<StackPanel Margin="0" Spacing="5" VerticalAlignment="Stretch">

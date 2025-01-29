@@ -14,11 +14,11 @@
 		ExtendClientAreaToDecorationsHint="True">
 
 	<Panel>
-		<StackPanel>
+		<StackPanel x:Name="MenuTitle">
 			<TextBlock Margin="0,8,0,0" HorizontalAlignment="Center" Text="{local:LocalizedMarkup settings_title}" />
 			<Separator VerticalAlignment="Top" Margin="10,5,10,0"/>
 		</StackPanel>
-		<StackPanel Margin="15,40,15,0" Spacing="5">
+		<StackPanel x:Name="MainContent" Margin="15,40,15,0" Spacing="5">
 			<Grid Margin="0,5,0,5" ColumnDefinitions="*,Auto,*" VerticalAlignment="Center">
 				<Border BorderBrush="Gray" BorderThickness="0,1,0,0" VerticalAlignment="Center" Margin="0,0,5,0" Grid.Column="0"/>
 				<TextBlock Text="{local:LocalizedMarkup settings_xorkey}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1"/>
