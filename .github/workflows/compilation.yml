@@ -30,7 +30,7 @@ jobs:
         run: dotnet test CMSTool/FallGuys-CMSTool.csproj --runtime linux-x64 --no-build --verbosity normal
 
   windows-build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
