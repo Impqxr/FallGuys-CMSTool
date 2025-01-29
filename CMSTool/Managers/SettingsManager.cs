@@ -56,11 +56,7 @@ namespace FGCMSTool.Managers
 
         public void Load(string baseDir)
         {
-#if RELEASE_WIN_X64 || DEBUG
-            ConfigPath = Path.Combine(baseDir, "Assets", "config.json");
-#else
             ConfigPath = Path.Combine(baseDir, "config.json");
-#endif
 
             try
             {
