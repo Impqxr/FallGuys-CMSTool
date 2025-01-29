@@ -1,0 +1,67 @@
+name: Publish Release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  linux-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore Dependencies
+        run: dotnet restore CMSTool/FallGuys-CMSTool.csproj --runtime linux-x64
+
+      - name: Build for Linux
+        run: dotnet build CMSTool/FallGuys-CMSTool.csproj --configuration Release-Linux-x64 --runtime linux-x64 --no-restore --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true
+
+      - name: Publish for Linux
+        run: dotnet publish CMSTool/FallGuys-CMSTool.csproj --configuration Release-Linux-x64 --runtime linux-x64 --output ./publish --no-build --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true
+
+      - name: Create Archive for Linux
+        run: |
+          cd publish
+          zip -r ../CMSTool-Linux-x64-${{ github.event.release.tag_name }}-release.zip .
+        shell: bash
+
+      - name: Upload Linux Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ./CMSTool-Linux-x64-${{ github.event.release.tag_name }}-release.zip
+
+  windows-build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore Dependencies
+        run: dotnet restore CMSTool/FallGuys-CMSTool.csproj --runtime win-x64
+
+      - name: Build for Windows
+        run: dotnet build CMSTool/FallGuys-CMSTool.csproj --configuration Release-Win-x64 --runtime win-x64 --no-restore --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true
+
+      - name: Publish for Windows
+        run: dotnet publish CMSTool/FallGuys-CMSTool.csproj --configuration Release-Win-x64 --runtime win-x64 --output ./publish --no-build --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true
+
+      - name: Create Archive for Windows
+        run: |
+          cd publish
+          powershell Compress-Archive -Path * -DestinationPath ../CMSTool-Win-x64-${{ github.event.release.tag_name }}-release.zip
+
+      - name: Upload Windows Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ./CMSTool-Win-x64-${{ github.event.release.tag_name }}-release.zip
