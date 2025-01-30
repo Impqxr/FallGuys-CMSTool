@@ -12,6 +12,9 @@ using Newtonsoft.Json.Linq;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 using FGCMSTool.Managers;
 using static FGCMSTool.Managers.LocalizationManager;
+using Xdg.Directories;
+using Avalonia;
+
 
 #if RELEASE_WIN_X64 || DEBUG
 using System.Media;
@@ -28,12 +31,21 @@ namespace FGCMSTool.Views
         readonly string LogsDir;
         public MainWindow()
         {
-
+#if RELEASE_WIN_X64 || DEBUG
             var baseDir = Path.GetDirectoryName(AppContext.BaseDirectory);
+
+            baseDir ??= AppContext.BaseDirectory;
+#else
+            var baseDir = Path.Combine(BaseDirectory.DataHome, "CMSTool");
+            var stateDir = Path.Combine(BaseDirectory.StateHome, "CMSTool");
+#endif
             LocalizationManager.Setup(baseDir);
 
             InitializeComponent();
-          
+#if RELEASE_LINUX_X64
+            MenuTitleTextBlock.Text = "";
+#endif
+
             DecryptionOutputDir = Path.Combine(baseDir, "Decrypted_Output");
             if (!Directory.Exists(DecryptionOutputDir))
                 Directory.CreateDirectory(DecryptionOutputDir);
@@ -41,7 +53,7 @@ namespace FGCMSTool.Views
             EncryptionOutputDir = Path.Combine(baseDir, "Encrypted_Output");
             if (!Directory.Exists(EncryptionOutputDir))
                 Directory.CreateDirectory(EncryptionOutputDir);
-            
+
             ImagesOutputDir = Path.Combine(baseDir, "Images_Output");
             if (!Directory.Exists(ImagesOutputDir))
                 Directory.CreateDirectory(ImagesOutputDir);
@@ -50,12 +62,20 @@ namespace FGCMSTool.Views
             if (!Directory.Exists(DownloadedDlcImagesDir))
                 Directory.CreateDirectory(DownloadedDlcImagesDir);
 
+#if RELEASE_WIN_X64 || DEBUG
             LogsDir = Path.Combine(baseDir, "Logs");
+#else
+            LogsDir = Path.Combine(stateDir, "Logs");
+#endif
             if (!Directory.Exists(LogsDir))
                 Directory.CreateDirectory(LogsDir);
 
             SettingsManager.Settings = new SettingsManager();
+#if RELEASE_WIN_X64 || DEBUG
             SettingsManager.Settings.Load(baseDir);
+#else
+            SettingsManager.Settings.Load(stateDir);
+#endif
 
         }
 
@@ -199,7 +219,7 @@ namespace FGCMSTool.Views
             try
             {
                 ProgressState.Text = LocalizedString("task_dlc_cms_active");
-              
+
                 string dirName = isV2 ? "content_v2" : "content_v1";
                 var outputJson = GetDecryptedContentBytes(cmsPath, Encoding.UTF8.GetBytes(SettingsManager.Settings.SavedSettings.XorKey), isV2);
 
@@ -215,6 +235,7 @@ namespace FGCMSTool.Views
                         else
                             ProgressState.Text = LocalizedString("task_dlc_cms_done");
                     };
+                    WindowManager.Instance.SetupWindow(dlcWindow);
                     dlcWindow.ShowDialog(this);
                 }
             }
@@ -234,11 +255,11 @@ namespace FGCMSTool.Views
 
             if (!DefaultCheck(LocalizedString("task_dlc"), mapPath))
                 return;
-            
+
             try
             {
                 ProgressState.Text = LocalizedString("task_dlc_active");
-                
+
                 List<CMSImage> images = CMSImage.ReadCMSImages(mapPath);
                 StringBuilder sb = new StringBuilder();
 
@@ -247,16 +268,16 @@ namespace FGCMSTool.Views
                     sb.AppendLine(image.ToString());
                     image.WriteToPngFile(Path.Combine(ImagesOutputDir, image.Name + ".png"));
                 }
-                
+
                 File.WriteAllText(Path.Combine(ImagesOutputDir, "files.map.txt"), sb.ToString());
 
                 if (!Directory.Exists(ImagesOutputDir))
                     Directory.CreateDirectory(ImagesOutputDir);
-                
+
                 ProgressState.Text = LocalizedString("task_dlc_done");
-                #if RELEASE_WIN_X64 || DEBUG
-                    SystemSounds.Asterisk.Play();
-                #endif
+#if RELEASE_WIN_X64 || DEBUG
+                SystemSounds.Asterisk.Play();
+#endif
             }
             catch (Exception ex)
             {

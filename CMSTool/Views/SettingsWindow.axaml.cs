@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using static FGCMSTool.Managers.SettingsManager;
 using static FGCMSTool.Managers.LocalizationManager;
+using Avalonia;
 namespace FGCMSTool.Views
 {
     public partial class SettingsWindow : Window
@@ -10,6 +11,10 @@ namespace FGCMSTool.Views
         public SettingsWindow()
         {
             InitializeComponent();
+#if RELEASE_LINUX_X64
+            MenuTitle.IsVisible = false;
+            MainContent.Margin = new Thickness(15, 10, 15, 0);
+#endif
 
             Loaded += (sender, e) =>
             {

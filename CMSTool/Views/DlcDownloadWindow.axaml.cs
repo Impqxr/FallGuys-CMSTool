@@ -39,11 +39,24 @@ namespace FGCMSTool.Views
         string? SaveDir;
         public bool isSuceed = false;
 
-        public DlcWindow() => InitializeComponent();
+        public DlcWindow()
+        {
+            InitializeComponent();
+#if RELEASE_LINUX_X64
+            MenuTitleTextBlock.IsVisible = false;
+            MenuTitleSeparator.IsVisible = false;
+            MainContent.Margin = new Thickness(0, 25, 0, 25);
+#endif
+        }
 
         public DlcWindow(JArray dlcImages, string savePath)
         {
             InitializeComponent();
+#if RELEASE_LINUX_X64
+            MenuTitleTextBlock.IsVisible = false;
+            MenuTitleSeparator.IsVisible = false;
+            MainContent.Margin = new Thickness(0, 25, 0, 25);
+#endif
 
             LogsControl.ItemsSource = log;
 
@@ -73,7 +86,7 @@ namespace FGCMSTool.Views
                 if (img?.DlcItem?.Base == null || img.DlcItem?.Path == null)
                     continue;
 
-                log.Add(LocalizedString("dlc_cms_downloading", [processed +1, img.Id]));
+                log.Add(LocalizedString("dlc_cms_downloading", [processed + 1, img.Id]));
 
                 try
                 {

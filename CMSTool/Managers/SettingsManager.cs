@@ -56,7 +56,7 @@ namespace FGCMSTool.Managers
 
         public void Load(string baseDir)
         {
-            ConfigPath = Path.Combine(baseDir, "Assets", "config.json");
+            ConfigPath = Path.Combine(baseDir, "config.json");
 
             try
             {

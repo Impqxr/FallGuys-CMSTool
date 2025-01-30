@@ -1,0 +1,50 @@
+name: Compile Check
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - "**"
+
+jobs:
+  linux-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore Dependencies
+        run: dotnet restore -r linux-x64 -p:PublishTrimmed=true
+
+      - name: Build for Linux
+        run: dotnet build -c Release-Linux-x64 --no-restore --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true
+
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
+
+  windows-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore Dependencies
+        run: dotnet restore -r win-x64 -p:PublishTrimmed=true
+
+      - name: Build for Windows
+        run: dotnet build -c Release-Win-x64 --no-restore --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true
+
+      - name: Test
+        run: dotnet test --no-build --verbosity normal

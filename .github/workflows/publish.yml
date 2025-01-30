@@ -1,0 +1,68 @@
+name: Publish Release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  linux-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore Dependencies
+        run: dotnet restore -r linux-x64 -p:PublishTrimmed=true
+
+      - name: Build for Linux
+        run: dotnet build -c Release-Linux-x64 --no-restore --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true
+
+      - name: Publish for Linux
+        run: dotnet publish -c Release-Linux-x64 --output ./publish --no-build --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true
+
+      - name: Create Archive for Linux
+        run: |
+          cd publish
+          zip -r ../CMSTool-Linux-x64-${{ github.event.release.tag_name }}-release.zip . -x "CMSTool.pdb"
+        shell: bash
+
+      - name: Upload Linux Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ./CMSTool-Linux-x64-${{ github.event.release.tag_name }}-release.zip
+
+  windows-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore Dependencies
+        run: dotnet restore -r win-x64 -p:PublishTrimmed=true
+
+      - name: Build for Windows
+        run: dotnet build -c Release-Win-x64 --no-restore --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true
+
+      - name: Publish for Windows
+        run: dotnet publish -c Release-Win-x64 --output ./publish --no-build --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true
+
+      - name: Create Archive for Windows
+        run: |
+          cd publish
+          zip -r ../CMSTool-Win-x64-${{ github.event.release.tag_name }}-release.zip . -x "CMSTool.pdb"
+        shell: bash
+
+      - name: Upload Windows Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ./CMSTool-Win-x64-${{ github.event.release.tag_name }}-release.zip
