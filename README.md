@@ -16,16 +16,16 @@
 #### Windows
 
 - Extract [latest release](https://github.com/floyzi/FallGuys-CMSTool/releases/latest) into the blank folder and launch the .exe
-- Or [compile it](https://github.com/floyzi/FallGuys-CMSTool/blob/linux/Assets/COMPILATION.md) by yourself
+- Or [compile it](https://github.com/floyzi/FallGuys-CMSTool/blob/master/Assets/COMPILATION.md) by yourself
 
 #### Linux (NixOS or any distribution with Nix package manager)
 
-- Check for [NIX.md](https://github.com/floyzi/FallGuys-CMSTool/blob/linux/Assets/NIX.md)
+- Check for [NIX.md](https://github.com/floyzi/FallGuys-CMSTool/blob/master/Assets/NIX.md)
 
 #### Linux (without Nix package manager)
 
 - Extract [latest release](https://github.com/floyzi/FallGuys-CMSTool/releases/latest) into the blank folder and launch the executable `CMSTool`
-- Or [compile it](https://github.com/floyzi/FallGuys-CMSTool/blob/linux/Assets/COMPILATION.md) by yourself
+- Or [compile it](https://github.com/floyzi/FallGuys-CMSTool/blob/master/Assets/COMPILATION.md) by yourself
 
 ## Usage
 

@@ -39,7 +39,6 @@ namespace FGCMSTool.Views
             var baseDir = Path.Combine(BaseDirectory.DataHome, "CMSTool");
             var stateDir = Path.Combine(BaseDirectory.StateHome, "CMSTool");
 #endif
-            LocalizationManager.Setup(baseDir);
 
             InitializeComponent();
 #if RELEASE_LINUX_X64
@@ -134,7 +133,7 @@ namespace FGCMSTool.Views
                 return false;
             }
 
-            if (string.IsNullOrEmpty(SettingsManager.Settings.SavedSettings.XorKey))
+            if (string.IsNullOrEmpty(SettingsManager.Settings!.SavedSettings!.XorKey))
             {
                 ProgressState.Text = string.Format(LocalizedString("def_check_xor_fail", [sender])); ;
                 return false;
@@ -173,18 +172,18 @@ namespace FGCMSTool.Views
         {
             var cmsPath = CMSPath_Encrypted.Text;
 
-            if (!DefaultCheck(LocalizedString("task_decryption"), cmsPath))
+            if (!DefaultCheck(LocalizedString("task_decryption"), cmsPath!))
                 return;
 
-            byte[] xorKey = Encoding.UTF8.GetBytes(SettingsManager.Settings.SavedSettings.XorKey);
-            bool isV2 = IsContentV2(cmsPath);
+            byte[] xorKey = Encoding.UTF8.GetBytes(SettingsManager.Settings!.SavedSettings!.XorKey!);
+            bool isV2 = IsContentV2(cmsPath!);
             string contentOut = isV2 ? "content_v2" : "content_v1";
 
             try
             {
                 ProgressState.Text = LocalizedString("task_decryption_active");
 
-                var outputJson = GetDecryptedContentBytes(cmsPath, xorKey, isV2);
+                var outputJson = GetDecryptedContentBytes(cmsPath!, xorKey, isV2);
 
                 if (!Directory.Exists(DecryptionOutputDir))
                     Directory.CreateDirectory(DecryptionOutputDir);
@@ -200,7 +199,7 @@ namespace FGCMSTool.Views
             }
             catch (Exception ex)
             {
-                WriteLog(ex, LocalizedString("task_decryption_fail_log_01", [isV2, SettingsManager.Settings.SavedSettings.XorKey]));
+                WriteLog(ex, LocalizedString("task_decryption_fail_log_01", [isV2, SettingsManager.Settings!.SavedSettings!.XorKey!]));
                 ProgressState.Text = LocalizedString("task_decryption_fail");
 #if RELEASE_WIN_X64 || DEBUG
                 SystemSounds.Exclamation.Play();
@@ -212,19 +211,19 @@ namespace FGCMSTool.Views
         {
             var cmsPath = CMSFetchDlcImages.Text;
 
-            if (!DefaultCheck(LocalizedString("task_dlc_cms"), cmsPath))
+            if (!DefaultCheck(LocalizedString("task_dlc_cms"), cmsPath!))
                 return;
 
-            bool isV2 = IsContentV2(cmsPath);
+            bool isV2 = IsContentV2(cmsPath!);
             try
             {
                 ProgressState.Text = LocalizedString("task_dlc_cms_active");
 
                 string dirName = isV2 ? "content_v2" : "content_v1";
-                var outputJson = GetDecryptedContentBytes(cmsPath, Encoding.UTF8.GetBytes(SettingsManager.Settings.SavedSettings.XorKey), isV2);
+                var outputJson = GetDecryptedContentBytes(cmsPath!, Encoding.UTF8.GetBytes(SettingsManager.Settings!.SavedSettings!.XorKey!), isV2);
 
-                Dictionary<string, object> cmsJson = JsonConvert.DeserializeObject<Dictionary<string, object>>(Encoding.UTF8.GetString(outputJson));
-                if (cmsJson != null && cmsJson.TryGetValue("dlc_images", out object? value))
+                Dictionary<string, object>? cmsJson = JsonConvert.DeserializeObject<Dictionary<string, object>>(Encoding.UTF8.GetString(outputJson));
+                if (cmsJson != null && cmsJson.TryGetValue("dlc_images", out object? value) && value is JArray)
                 {
                     var dlcWindow = new DlcWindow(value as JArray, Path.Combine(DownloadedDlcImagesDir, dirName));
                     ProgressState.Text = LocalizedString("task_dlc_cms_active_long");
@@ -241,7 +240,7 @@ namespace FGCMSTool.Views
             }
             catch (Exception ex)
             {
-                WriteLog(ex, LocalizedString("task_dlc_cms_fail_log", [isV2, SettingsManager.Settings.SavedSettings.XorKey]));
+                WriteLog(ex, LocalizedString("task_dlc_cms_fail_log", [isV2, SettingsManager.Settings!.SavedSettings!.XorKey!]));
                 ProgressState.Text = LocalizedString("task_dlc_cms_fail");
 #if RELEASE_WIN_X64 || DEBUG
                 SystemSounds.Exclamation.Play();
@@ -253,14 +252,14 @@ namespace FGCMSTool.Views
         {
             var mapPath = CMSImageFileMapPath.Text;
 
-            if (!DefaultCheck(LocalizedString("task_dlc"), mapPath))
+            if (!DefaultCheck(LocalizedString("task_dlc"), mapPath!))
                 return;
 
             try
             {
                 ProgressState.Text = LocalizedString("task_dlc_active");
 
-                List<CMSImage> images = CMSImage.ReadCMSImages(mapPath);
+                List<CMSImage> images = CMSImage.ReadCMSImages(mapPath!);
                 StringBuilder sb = new StringBuilder();
 
                 foreach (var image in images)
@@ -312,7 +311,7 @@ namespace FGCMSTool.Views
                         break;
 
                     case SettingsManager.DecryptStrat.Parts:
-                        Dictionary<string, object> cmsJson = JsonConvert.DeserializeObject<Dictionary<string, object>>(Encoding.UTF8.GetString(json));
+                        Dictionary<string, object>? cmsJson = JsonConvert.DeserializeObject<Dictionary<string, object>>(Encoding.UTF8.GetString(json));
                         var targetDir = Path.Combine(DecryptionOutputDir, contentOut);
 
                         if (Directory.Exists(targetDir))
@@ -320,7 +319,7 @@ namespace FGCMSTool.Views
 
                         Directory.CreateDirectory(targetDir);
 
-                        foreach (var key in cmsJson.Keys)
+                        foreach (var key in cmsJson!.Keys)
                         {
                             if (cmsJson[key] is JArray || cmsJson[key] is JObject)
                                 File.WriteAllText(Path.Combine(targetDir, $"{key}.json"), JsonConvert.SerializeObject(cmsJson[key], Formatting.Indented));
@@ -331,7 +330,7 @@ namespace FGCMSTool.Views
             catch (Exception ex)
             {
                 ProgressState.Text = LocalizedString("task_decryption_fail");
-                WriteLog(ex, LocalizedString("task_decryption_fail_log_02", [SettingsManager.Settings?.SavedSettings?.DecryptStrat]));
+                WriteLog(ex, LocalizedString("task_decryption_fail_log_02", [SettingsManager.Settings!.SavedSettings!.DecryptStrat]));
 #if RELEASE_WIN_X64 || DEBUG
                 SystemSounds.Exclamation.Play();
 #endif
@@ -344,17 +343,17 @@ namespace FGCMSTool.Views
         {
             var cmsPath = CMSPath_Decrypted.Text;
 
-            if (!DefaultCheck(LocalizedString("task_encryption"), cmsPath))
+            if (!DefaultCheck(LocalizedString("task_encryption"), cmsPath!))
                 return;
 
             try
             {
-                byte[] xorKey = Encoding.UTF8.GetBytes(SettingsManager.Settings?.SavedSettings?.XorKey);
-                byte[] cmsBytes = GetContentBytes(cmsPath);
+                byte[] xorKey = Encoding.UTF8.GetBytes(SettingsManager.Settings!.SavedSettings!.XorKey!);
+                byte[] cmsBytes = GetContentBytes(cmsPath!);
 
                 ProgressState.Text = LocalizedString("task_encryption_active");
 
-                switch (SettingsManager.Settings.SavedSettings.EncryptStrart)
+                switch (SettingsManager.Settings!.SavedSettings!.EncryptStrart)
                 {
                     case SettingsManager.EncryptStrart.V1:
                         XorTask(ref cmsBytes, xorKey);
@@ -378,7 +377,7 @@ namespace FGCMSTool.Views
                         break;
                 }
 
-                ProgressState.Text = LocalizedString("task_encryption_done", [SettingsManager.Settings?.SavedSettings?.EncryptStrart]);
+                ProgressState.Text = LocalizedString("task_encryption_done", [SettingsManager.Settings!.SavedSettings!.EncryptStrart]);
 #if RELEASE_WIN_X64 || DEBUG
                 SystemSounds.Asterisk.Play();
 #endif
@@ -386,7 +385,7 @@ namespace FGCMSTool.Views
             catch (Exception ex)
             {
                 ProgressState.Text = LocalizedString("task_encryption_fail");
-                WriteLog(ex, LocalizedString("task_encryption_fail_log", [SettingsManager.Settings?.SavedSettings?.EncryptStrart]));
+                WriteLog(ex, LocalizedString("task_encryption_fail_log", [SettingsManager.Settings!.SavedSettings!.EncryptStrart]));
 #if RELEASE_WIN_X64 || DEBUG
                 SystemSounds.Exclamation.Play();
 #endif
@@ -402,16 +401,16 @@ namespace FGCMSTool.Views
             else
             {
                 Dictionary<string, object> finalCms = [];
-                foreach (var jsonFile in Directory.GetFiles(Path.GetDirectoryName(cmsPath), "*.json"))
+                foreach (var jsonFile in Directory.GetFiles(Path.GetDirectoryName(cmsPath)!, "*.json"))
                 {
-                    finalCms[Path.GetFileNameWithoutExtension(jsonFile)] = JsonConvert.DeserializeObject(File.ReadAllText(jsonFile));
+                    finalCms[Path.GetFileNameWithoutExtension(jsonFile)] = JsonConvert.DeserializeObject(File.ReadAllText(jsonFile))!;
                 }
                 return Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(finalCms, Formatting.None));
 
             }
         }
 
-        void XorTask(ref byte[] bytes, byte[] xor)
+        static void XorTask(ref byte[] bytes, byte[] xor)
         {
             for (int i = 0; i < bytes.Length; i++)
             {
@@ -419,7 +418,7 @@ namespace FGCMSTool.Views
             }
         }
 
-        void OpenDir(string dir) => Process.Start(new ProcessStartInfo
+        void OpenDir(string? dir) => Process.Start(new ProcessStartInfo
         {
             FileName = dir,
             UseShellExecute = true
@@ -440,7 +439,7 @@ namespace FGCMSTool.Views
 
             if (data is Exception ex)
             {
-                output += LocalizedString("log_exception", [ex.Message, ex.StackTrace]);
+                output += LocalizedString("log_exception", [ex.Message, ex.StackTrace!]);
             }
 
             File.WriteAllText(Path.Combine(LogsDir, log), output);

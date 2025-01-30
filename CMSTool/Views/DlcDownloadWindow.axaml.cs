@@ -36,7 +36,7 @@ namespace FGCMSTool.Views
         }
 
         readonly ObservableCollection<string> log = [];
-        string? SaveDir;
+        string? SaveDir = string.Empty;
         public bool isSuceed = false;
 
         public DlcWindow()
@@ -49,7 +49,7 @@ namespace FGCMSTool.Views
 #endif
         }
 
-        public DlcWindow(JArray dlcImages, string savePath)
+        public DlcWindow(JArray? dlcImages, string? savePath)
         {
             InitializeComponent();
 #if RELEASE_LINUX_X64
@@ -64,14 +64,14 @@ namespace FGCMSTool.Views
             {
                 SaveDir = savePath;
 
-                var images = dlcImages.ToObject<HashSet<DlcImage>>();
+                var images = dlcImages?.ToObject<HashSet<DlcImage>>();
 
                 if (images != null)
                     Begin(images);
             };
         }
 
-        async void Begin(HashSet<DlcImage> images)
+        async void Begin(HashSet<DlcImage>? images)
         {
             int processed = 0;
             int failed = 0;
@@ -79,14 +79,14 @@ namespace FGCMSTool.Views
             if (Directory.Exists(SaveDir))
                 Directory.Delete(SaveDir, true);
 
-            Directory.CreateDirectory(SaveDir);
+            Directory.CreateDirectory(SaveDir!);
 
-            foreach (var img in images)
+            foreach (var img in images!)
             {
                 if (img?.DlcItem?.Base == null || img.DlcItem?.Path == null)
                     continue;
 
-                log.Add(LocalizedString("dlc_cms_downloading", [processed + 1, img.Id]));
+                log.Add(LocalizedString("dlc_cms_downloading", [processed + 1, img.Id!]));
 
                 try
                 {
@@ -116,7 +116,7 @@ namespace FGCMSTool.Views
 #endif
         }
 
-        async Task GetImage(string url, string dlcName)
+        async Task GetImage(string? url, string? dlcName)
         {
             using var client = new HttpClient();
             var response = await client.GetAsync(url);
@@ -125,7 +125,7 @@ namespace FGCMSTool.Views
 
             byte[] data = await response.Content.ReadAsByteArrayAsync();
 
-            await File.WriteAllBytesAsync(Path.Combine(SaveDir, $"{dlcName}.png"), data);
+            await File.WriteAllBytesAsync(Path.Combine(SaveDir!, $"{dlcName}.png"), data);
         }
     }
 }
