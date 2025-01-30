@@ -50,12 +50,11 @@ jobs:
       - name: Restore Dependencies
         run: dotnet restore CMSTool/FallGuys-CMSTool.csproj --runtime win-x64
 
-      # Don't add `-p:PublishTrimmed=true` unless Microsoft fix their Windows Defender
       - name: Build for Windows
-        run: dotnet build CMSTool/FallGuys-CMSTool.csproj --configuration Release-Win-x64 --runtime win-x64 --no-restore --self-contained -p:PublishSingleFile=true
+        run: dotnet build CMSTool/FallGuys-CMSTool.csproj --configuration Release-Win-x64 --runtime win-x64 --no-restore --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true
 
       - name: Publish for Windows
-        run: dotnet publish CMSTool/FallGuys-CMSTool.csproj --configuration Release-Win-x64 --runtime win-x64 --output ./publish --no-build --self-contained -p:PublishSingleFile=true
+        run: dotnet publish CMSTool/FallGuys-CMSTool.csproj --configuration Release-Win-x64 --runtime win-x64 --output ./publish --no-build --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true
 
       - name: Create Archive for Windows
         run: |
