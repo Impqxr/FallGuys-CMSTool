@@ -42,6 +42,8 @@
             nugetDeps = ./deps.json;
             executables = [ "CMSTool" ];
             buildType = "Release-Linux-x64";
+            selfContainedBuild = true;
+            dotnetFlags = [ "-p:PublishSingleFile=true" "-p:PublishTrimmed=true" ];
 
             desktopItems = [
               (pkgs.makeDesktopItem {
