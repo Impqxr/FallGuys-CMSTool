@@ -13,7 +13,7 @@ winget install Microsoft.DotNet.SDK.8 Git.Git --source winget
 2. Now compile CMS Tool with these commands in PowerShell
 
 ```shell
-git clone https://github.com/Impqxr/FallGuys-CMSTool.git; cd FallGuys-CMSTool
+git clone https://github.com/floyzi/FallGuys-CMSTool.git; cd FallGuys-CMSTool
 dotnet publish -c Release-Win-x64 --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true
 ```
 
@@ -46,7 +46,7 @@ pacman -S dotnet-sdk-8.0 git
 2. Now compile CMS Tool with these commands
 
 ```shell
-git clone https://github.com/Impqxr/FallGuys-CMSTool.git; cd FallGuys-CMSTool
+git clone https://github.com/floyzi/FallGuys-CMSTool.git; cd FallGuys-CMSTool
 dotnet publish -c Release-Linux-x64 --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true
 ```
 

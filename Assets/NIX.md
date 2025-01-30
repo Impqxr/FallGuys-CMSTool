@@ -4,7 +4,7 @@
 
 ### Installing the package directly
 
-After adding `github:Impqxr/FallGuys-CMSTool` to inputs in your flake, you can access the `packages` output.
+After adding `github:floyzi/FallGuys-CMSTool` to inputs in your flake, you can access the `packages` output.
 Example:
 
 ```nix
@@ -13,7 +13,7 @@ Example:
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     cmstool = {
-      url = "github:Impqxr/FallGuys-CMSTool";
+      url = "github:floyzi/FallGuys-CMSTool";
     };
   };
 
@@ -42,10 +42,10 @@ You can simply run these commands to either run or install the default package f
 
 ```shell
 # To run it
-nix run github:Impqxr/FallGuys-CMSTool
+nix run github:floyzi/FallGuys-CMSTool
 
 # To install it
-nix profile install github:Impqxr-CMSTool-Linux
+nix profile install github:floyzi-CMSTool-Linux
 ```
 
 ## Installing an upstream release (Without flakes)
@@ -59,7 +59,7 @@ We use flake-compat to allow using this without enabled flakes in your system.
 {
   environment.systemPackages = [
     (import (
-      builtins.fetchTarball "https://github.com/Impqxr/FallGuys-CMSTool/archive/linux.tar.gz"
+      builtins.fetchTarball "https://github.com/floyzi/FallGuys-CMSTool/archive/linux.tar.gz"
     )).packages.${pkgs.system}.default
   ];
 }
@@ -68,7 +68,7 @@ We use flake-compat to allow using this without enabled flakes in your system.
 ### Using commands to install it (Works for any distribution with Nix package manager)
 
 ```shell
-nix-channel --add https://github.com/Impqxr/FallGuys-CMSTool/archive/linux.tar.gz cmstool
+nix-channel --add https://github.com/floyzi/FallGuys-CMSTool/archive/linux.tar.gz cmstool
 nix-channel --update cmstool
 
 nix-env -iA cmstool.default
