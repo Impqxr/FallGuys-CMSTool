@@ -235,6 +235,7 @@ namespace FGCMSTool.Views
                         else
                             ProgressState.Text = LocalizedString("task_dlc_cms_done");
                     };
+                    WindowManager.Instance.SetupWindow(dlcWindow);
                     dlcWindow.ShowDialog(this);
                 }
             }
