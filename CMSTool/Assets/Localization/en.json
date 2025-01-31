@@ -1,4 +1,4 @@
-{ 
+{
     "title": "CMS Tool",
     "settings_title": "{ref:title} - Settings",
     "settings_xorkey": "XOR Key",
@@ -85,5 +85,6 @@
     "dlc_cms_saved": "Saved",
     "dlc_cms_failed": "Failed",
     "dlc_cms_progress": "{0} / {1} Done - Failed: {2} ({3:0}%)",
-    "dlc_cms_done": "Download finished. You can close this window now"
+    "dlc_cms_done": "Download finished. You can close this window now",
+    "dlc_cms_null_dlc": "Dlc images is null."
 }

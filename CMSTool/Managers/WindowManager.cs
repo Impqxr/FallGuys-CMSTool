@@ -38,10 +38,10 @@ namespace FGCMSTool.Managers
                 switch (theme)
                 {
                     case PlatformThemeVariant.Light:
-                        window.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255), 80);
+                        window.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255), 60);
                         break;
                     case PlatformThemeVariant.Dark:
-                        window.Background = new SolidColorBrush(Color.FromRgb(0, 0, 0), 150);
+                        window.Background = new SolidColorBrush(Color.FromRgb(0, 0, 0), 120);
                         break;
                 }
             }
@@ -58,9 +58,6 @@ namespace FGCMSTool.Managers
             };
         }
 
-        public void RemoveWindow(Window window)
-        {
-            ActiveWindows?.Remove(window);
-        }
+        public void RemoveWindow(Window window) => ActiveWindows?.Remove(window);
     }
 }

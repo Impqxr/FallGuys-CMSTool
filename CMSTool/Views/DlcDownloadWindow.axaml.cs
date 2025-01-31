@@ -64,6 +64,12 @@ namespace FGCMSTool.Views
             {
                 SaveDir = savePath;
 
+                if (dlcImages == null)
+                {
+                    log.Add(LocalizedString("dlc_cms_null_dlc"));
+                    return;
+                }
+
                 var images = dlcImages?.ToObject<HashSet<DlcImage>>();
 
                 if (images != null)

@@ -10,6 +10,7 @@
 - Content decryption in different ways
 - Custom XorKey
 - Encryption in both ways. Content_v1 & content_v2
+- DLC Images download & decryption of locally saved DLC images
 
 ## Installation
 

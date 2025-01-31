@@ -207,7 +207,7 @@ namespace FGCMSTool.Views
             }
         }
 
-        void DownloadDlc(object sender, RoutedEventArgs e)
+        async void DownloadDlc(object sender, RoutedEventArgs e)
         {
             var cmsPath = CMSFetchDlcImages.Text;
 
@@ -235,7 +235,7 @@ namespace FGCMSTool.Views
                             ProgressState.Text = LocalizedString("task_dlc_cms_done");
                     };
                     WindowManager.Instance.SetupWindow(dlcWindow);
-                    dlcWindow.ShowDialog(this);
+                    await dlcWindow.ShowDialog(this);
                 }
             }
             catch (Exception ex)
